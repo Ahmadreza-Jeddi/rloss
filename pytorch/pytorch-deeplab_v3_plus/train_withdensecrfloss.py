@@ -17,6 +17,11 @@ from utils.metrics import Evaluator
 
 from DenseCRFLoss import DenseCRFLoss
 
+### additions
+import multiprocessing as mp
+from utils.post_process import dense_crf_wrapper
+
+
 class Trainer(object):
     def __init__(self, args):
         self.args = args
@@ -176,7 +181,15 @@ class Trainer(object):
             loss = self.criterion(output, target)
             test_loss += loss.item()
             tbar.set_description('Test loss: %.3f' % (test_loss / (i + 1)))
+            pred = F.softmax(output, dim=1)
             pred = output.data.cpu().numpy()
+
+            if self.args.post_process:
+                pool = mp.Pool(mp.cpu_count())
+                image = image.data.cpu().numpy().astype(np.uint8).transpose(0, 2, 3, 1)
+                pred = pool.map(dense_crf_wrapper, zip(image, pred))
+                pool.close()
+
             target = target.cpu().numpy()
             pred = np.argmax(pred, axis=1)
             # Add batch sample into evaluator
@@ -293,6 +306,10 @@ def main():
                         help='DenseCRF sigma_rgb')
     parser.add_argument('--sigma-xy',type=float,default=80.0,
                         help='DenseCRF sigma_xy')
+
+    # whether to add dense-CRF post-processing
+    parser.add_argument('--post-process', action='store_true', default=False,
+                        help='whether to use dense CRF post processing during evaluation (default: False)')
     
 
     args = parser.parse_args()
