@@ -1,4 +1,8 @@
-## Regularized Losses (rloss) for Weakly-supervised CNN Segmentation 
+## How to Tackle the problem of limited annotations in semantic segmentation
+
+
+
+### Regularized Losses (rloss) for Weakly-supervised CNN Segmentation (From here on is from Meng Tang)
 
 (Caffe and Pytorch)
 
