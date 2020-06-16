@@ -6,10 +6,11 @@ from modeling.aspp import build_aspp
 from modeling.decoder import build_decoder
 from modeling.backbone import build_backbone
 
-class DeepLab(nn.Module):
+### DeepLab-V3+ which has ASPP modules appended to the encoder
+class DeepLab_v3plus(nn.Module):
     def __init__(self, backbone='resnet', output_stride=16, num_classes=21,
                  sync_bn=True, freeze_bn=False):
-        super(DeepLab, self).__init__()
+        super(DeepLab_v3plus, self).__init__()
         if backbone == 'drn':
             output_stride = 8
 
@@ -62,7 +63,7 @@ class DeepLab(nn.Module):
 
 
 if __name__ == "__main__":
-    model = DeepLab(backbone='mobilenet', output_stride=16)
+    model = DeepLab_v3plus(backbone='mobilenet', output_stride=16)
     model.eval()
     input = torch.rand(1, 3, 513, 513)
     output = model(input)
