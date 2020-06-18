@@ -1,5 +1,5 @@
 ## How to Tackle the problem of limited annotations in semantic segmentation
-
+Most of this codes are written by Meng Tang.
 
 
 ### Regularized Losses (rloss) for Weakly-supervised CNN Segmentation (From here on is from Meng Tang)
